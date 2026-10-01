@@ -10,14 +10,12 @@ interface ReportsViewProps {
 }
 
 export const ReportsView: React.FC<ReportsViewProps> = ({
-  currentRole,
   onExportPDF,
   onExportExcel,
   industries = [],
-  schools = [],
 }) => {
   const [selectedReportType, setSelectedReportType] = useState<'overview' | 'attendance' | 'competency' | 'industry_partner'>('overview');
-  const [selectedPeriod, setSelectedPeriod] = useState('Semester Ganjil 2026/2027');
+  const selectedPeriod = 'Semester Ganjil 2026/2027';
 
   const partnerData = industries.length > 0
     ? industries.map(ind => ({

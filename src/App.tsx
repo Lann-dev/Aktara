@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { UserRole, NavTab, ProgramCohort, PendingAction, FeedbackItem, NotificationItem, AuthUser, AuditLogItem } from './types';
 import {
   INITIAL_PROGRAMS,
@@ -23,6 +23,8 @@ import { normalizeRole, ROLES_CONFIG } from './data/rolesData';
 import { SupabaseAuthService, DB_USER_PROFILES } from './services/authService';
 import { DbService } from './services/dbService';
 import { LoginPage } from './components/auth/LoginPage';
+import { FeedbackToast } from './components/ui/FeedbackToast';
+import { LoadingSkeleton } from './components/ui/LoadingSkeleton';
 import { Sidebar } from './components/Sidebar';
 import { TopHeader } from './components/TopHeader';
 import { AdminOverviewView } from './components/views/AdminOverviewView';
@@ -52,7 +54,6 @@ import { StudentPublicPortfolioView } from './components/views/StudentPublicPort
 import { NotificationsCenterView } from './components/views/NotificationsCenterView';
 import { AuditLogsView } from './components/views/AuditLogsView';
 import { ErdLogicalModelView } from './components/views/ErdLogicalModelView';
-import { UnauthorizedView } from './components/views/UnauthorizedView';
 import {
   NewPlacementModal,
   CreateProgramModal,
@@ -72,10 +73,8 @@ export default function App() {
   // Authoritative user profile initialized from verified DB record
   const initialDbUser = DB_USER_PROFILES.find((u) => u.role === 'school_admin') || DB_USER_PROFILES[1];
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<AuthUser>(() => {
-    const saved = SupabaseAuthService.getSavedSession();
-    if (saved) return saved;
     return {
       id: initialDbUser.id,
       name: initialDbUser.name,
@@ -91,7 +90,7 @@ export default function App() {
       rememberMe: true,
     };
   });
-  const [currentRole, setCurrentRole] = useState<UserRole>(() => currentUser.role);
+  const [currentRole, setCurrentRole] = useState<UserRole>(initialDbUser.role);
 
   // Loading & Database state
   const [isLoadingData, setIsLoadingData] = useState<boolean>(false);
@@ -142,6 +141,11 @@ export default function App() {
 
   // Asynchronously query database via DbService
   useEffect(() => {
+    if (!isAuthenticated) {
+      setIsLoadingData(false);
+      return;
+    }
+
     let isMounted = true;
 
     async function loadData() {
@@ -207,7 +211,7 @@ export default function App() {
     return () => {
       isMounted = false;
     };
-  }, [currentUser.id, currentUser.tenantId, currentRole]);
+  }, [isAuthenticated, currentUser.id, currentUser.tenantId, currentRole]);
 
   // Listen to hash for #login or direct login route simulation
   useEffect(() => {
@@ -364,9 +368,8 @@ export default function App() {
     return (
       <>
         {toastMessage && (
-          <div className="fixed top-5 right-5 z-50 glass-card bg-[#131127]/90 text-white px-4 py-3 rounded-2xl border border-violet-500/40 shadow-2xl text-[13px] font-semibold flex items-center gap-2.5 backdrop-blur-xl">
-            <span className="material-symbols-outlined text-[20px] text-violet-400">info</span>
-            <span>{toastMessage}</span>
+          <div className="toast-enter fixed left-4 right-4 top-4 z-[120] sm:left-auto sm:right-4 sm:w-96 sm:max-w-[calc(100vw-2rem)]">
+            <FeedbackToast title={toastMessage} onDismiss={() => setToastMessage(null)} />
           </div>
         )}
         <LoginPage
@@ -382,9 +385,8 @@ export default function App() {
       {/* Background radial glows for rich Frosted Glass atmosphere */}
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 glass-card bg-[#131127]/90 text-white px-4 py-3 rounded-2xl border border-violet-500/40 shadow-2xl shadow-purple-950/60 text-[13px] font-semibold flex items-center gap-2.5 animate-bounce backdrop-blur-xl">
-          <span className="material-symbols-outlined text-[20px] text-violet-400">info</span>
-          <span>{toastMessage}</span>
+        <div className="toast-enter fixed left-4 right-4 top-4 z-[120] sm:left-auto sm:right-4 sm:w-96 sm:max-w-[calc(100vw-2rem)]">
+          <FeedbackToast title={toastMessage} onDismiss={() => setToastMessage(null)} />
         </div>
       )}
 
@@ -412,8 +414,9 @@ export default function App() {
         <TopHeader
           currentRole={normalizedRole}
           currentUser={currentUser}
+          mobileSidebarOpen={mobileSidebarOpen}
           onRoleChange={handleRoleChange}
-          onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+          onToggleMobileSidebar={() => setMobileSidebarOpen((open) => !open)}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onOpenNotifications={() => setNotificationsModalOpen(true)}
@@ -424,7 +427,9 @@ export default function App() {
         />
 
         {/* Scrollable Main Content by RBAC */}
-        <main className="app-main flex-1 p-4 md:p-6 max-w-[1440px] mx-auto w-full">
+        <main className="app-main flex-1 p-4 md:p-6 max-w-[1440px] mx-auto w-full" aria-busy={isLoadingData}>
+          {isLoadingData ? <LoadingSkeleton /> : (
+          <div key={`${normalizedRole}-${activeTab}`} className="view-enter">
           {/* 1. Super Admin View */}
           {normalizedRole === 'super_admin' && activeTab === 'dashboard' && (
             <SuperAdminView
@@ -921,6 +926,8 @@ export default function App() {
               searchQuery={searchQuery}
               isReadOnly={true}
             />
+          )}
+          </div>
           )}
         </main>
       </div>

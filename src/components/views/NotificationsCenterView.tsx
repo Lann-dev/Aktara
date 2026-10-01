@@ -12,7 +12,6 @@ export const NotificationsCenterView: React.FC<NotificationsCenterViewProps> = (
   notifications: initialNotifications,
   onMarkAllAsRead,
   onNavigateTab,
-  onClearNotifications,
 }) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
   const [filterType, setFilterType] = useState<'ALL' | 'UNREAD' | 'JOURNAL' | 'ATTENDANCE' | 'SYSTEM'>('ALL');

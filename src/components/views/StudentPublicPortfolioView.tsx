@@ -74,7 +74,6 @@ const SKILL_MATRIX = [
 ];
 
 export const StudentPublicPortfolioView: React.FC<StudentPublicPortfolioViewProps> = ({
-  currentRole,
   searchQuery = '',
   onDownloadCv,
   onSharePortfolio,

@@ -1,5 +1,5 @@
 import { UserRole, AuthUser, DbUserProfile, LoginAuthResult } from '../types';
-import { ROLES_CONFIG, normalizeRole } from '../data/rolesData';
+import { normalizeRole } from '../data/rolesData';
 import { ASSETS } from '../data/mockData';
 import { supabase } from '../lib/supabase';
 

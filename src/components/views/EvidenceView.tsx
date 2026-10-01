@@ -158,7 +158,7 @@ export const EvidenceView: React.FC<EvidenceViewProps> = ({
   const [localSearch, setLocalSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
-  const [selectedDept, setSelectedDept] = useState<string>('ALL');
+  const [selectedDept] = useState<string>('ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [selectedEvidenceDetail, setSelectedEvidenceDetail] = useState<EvidenceItem | null>(null);
 

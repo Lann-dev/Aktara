@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PendingAction, ProgramCohort, FeedbackItem, NotificationItem } from '../../types';
+import { PendingAction, ProgramCohort, NotificationItem } from '../../types';
 
 // 1. New Placement Modal
 export const NewPlacementModal: React.FC<{

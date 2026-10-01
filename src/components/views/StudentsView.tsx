@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { StudentItem, UserRole } from '../../types';
-import { MENTOR_STUDENTS, ASSETS } from '../../data/mockData';
+import { MENTOR_STUDENTS } from '../../data/mockData';
 
 interface StudentsViewProps {
   currentRole: UserRole;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { IndustryMaster, IndustryUnitMaster, UserRole } from '../../types';
+import { IndustryMaster, UserRole } from '../../types';
 
 interface IndustriesViewProps {
   industries: IndustryMaster[];
@@ -24,11 +24,6 @@ export const IndustriesView: React.FC<IndustriesViewProps> = ({
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [expandedIndustryId, setExpandedIndustryId] = useState<string | null>(null);
   const [detailModalIndustry, setDetailModalIndustry] = useState<IndustryMaster | null>(null);
-  const [newUnitModalIndustry, setNewUnitModalIndustry] = useState<IndustryMaster | null>(null);
-  const [newUnitName, setNewUnitName] = useState('');
-  const [newUnitHead, setNewUnitHead] = useState('');
-  const [newUnitAddress, setNewUnitAddress] = useState('');
-
   const isReadOnly = currentRole === 'viewer_dinas';
 
   // Extract unique sectors

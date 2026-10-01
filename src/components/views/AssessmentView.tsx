@@ -14,7 +14,6 @@ export const AssessmentView: React.FC<AssessmentViewProps> = ({
   currentRole,
   searchQuery = '',
   onLockFinalizeAssessment,
-  onUpdateScore,
 }) => {
   const [selectedAssessment, setSelectedAssessment] = useState<StudentAssessment | null>(assessments[0] || null);
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { UserRole, AuthUser } from '../../types';
-import { ROLES_CONFIG, normalizeRole, ROLE_ROUTES } from '../../data/rolesData';
+import { AuthUser } from '../../types';
+import { ROLES_CONFIG, normalizeRole } from '../../data/rolesData';
 
 interface UnauthorizedViewProps {
   currentUser: AuthUser;
@@ -15,8 +15,6 @@ export const UnauthorizedView: React.FC<UnauthorizedViewProps> = ({
 }) => {
   const currentRoleNormalized = normalizeRole(currentUser.role);
   const roleCfg = ROLES_CONFIG[currentRoleNormalized] || ROLES_CONFIG.school_admin;
-  const authorizedDashboard = ROLE_ROUTES[currentRoleNormalized] || '/school/dashboard';
-
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center animate-fade-in">
       {/* 403 Access Denied Glass Card */}

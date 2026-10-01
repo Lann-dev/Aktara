@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { UserRole, AuthUser } from '../../types';
-import { ROLES_ARRAY, ROLES_CONFIG, normalizeRole } from '../../data/rolesData';
+import { ROLES_ARRAY, ROLES_CONFIG } from '../../data/rolesData';
 import { ASSETS } from '../../data/mockData';
-import { SupabaseAuthService, DB_USER_PROFILES } from '../../services/authService';
+import { SupabaseAuthService } from '../../services/authService';
+import { FeedbackToast } from '../ui/FeedbackToast';
 
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
   initialRole?: UserRole;
 }
 
-const isDevelopment = import.meta.env.DEV;
+const showDevelopmentTools =
+  import.meta.env.DEV && import.meta.env.VITE_SHOW_LOGIN_DEV_TOOLS === 'true';
 
 export const LoginPage: React.FC<LoginPageProps> = ({
   onLoginSuccess,
   initialRole = 'school_admin',
 }) => {
   const [selectedRole, setSelectedRole] = useState<UserRole>(initialRole);
-  const [email, setEmail] = useState(
-    isDevelopment ? ROLES_CONFIG[initialRole]?.defaultEmail || 'admin@smkn1jakarta.sch.id' : ''
-  );
-  const [password, setPassword] = useState(isDevelopment ? 'aktara@2024' : '');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [authStep, setAuthStep] = useState<string>('');
@@ -85,7 +85,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       const authResult = await SupabaseAuthService.authenticateWithRoleValidation(
         email,
         password,
-        isDevelopment ? selectedRole : undefined,
+        showDevelopmentTools ? selectedRole : undefined,
         (step) => {
           if (step === 'auth') setAuthStep('Memverifikasi Supabase Auth...');
           else if (step === 'get_user') setAuthStep('Mengekstrak authenticated user...');
@@ -165,7 +165,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             Platform Manajemen Magang & Praktik Kerja Lapangan Vokasi Terintegrasi
           </p>
 
-          {isDevelopment && (
+          {showDevelopmentTools && (
             <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[11px] text-blue-300 font-medium">
               <span className="material-symbols-outlined text-[14px] text-blue-400">verified_user</span>
               <span>Supabase Auth & Database Role Validation Active</span>
@@ -177,17 +177,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         <div className="login-card glass-card w-full rounded-xl p-5 sm:p-7">
           {/* Security Mismatch Alert Banner */}
           {errorMessage && (
-            <div
+            <FeedbackToast
               id="login-error-alert"
-              className="mb-5 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-100 text-[13px] shadow-lg animate-fade-in"
+              className="mb-5"
+              variant="error"
+              title={errorMessage}
+              onDismiss={() => {
+                setErrorMessage('');
+                setMismatchData(null);
+              }}
             >
-              <div className="flex items-start gap-2.5">
-                <span className="material-symbols-outlined text-[22px] text-rose-400 shrink-0 mt-0.5">
-                  gpp_bad
-                </span>
-                <div className="space-y-1.5 flex-1 min-w-0">
-                  <p className="font-bold text-[14px] text-rose-200">{errorMessage}</p>
-                  
                   {mismatchData && (
                     <div className="mt-2.5 pt-2.5 border-t border-rose-500/30 text-[12px] space-y-1.5 text-rose-200/90">
                       <div className="flex justify-between items-center bg-black/30 p-2 rounded-xl border border-rose-500/20">
@@ -225,14 +224,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       </div>
                     </div>
                   )}
-                </div>
-              </div>
-            </div>
+            </FeedbackToast>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Role Selector Custom Dropdown (UX Helper) */}
-            {isDevelopment && <div className="relative">
+            {showDevelopmentTools && <div className="relative">
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Role Selector <span className="text-blue-400 font-normal text-[10px]">(UX Helper Saja)</span>
@@ -439,7 +436,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </form>
 
           {/* Quick 1-Click Role Switcher & Flow Inspector */}
-          {isDevelopment && <div className="mt-6 pt-5 border-t border-slate-800">
+          {showDevelopmentTools && <div className="mt-6 pt-5 border-t border-slate-800">
             <div className="flex items-center justify-between mb-2.5">
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 Akses Cepat Pengujian Role

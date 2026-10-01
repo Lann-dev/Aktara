@@ -29,7 +29,6 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
   onNavigateToJournals,
   onNavigateToCompetencies,
   onNavigateToSupervision,
-  onNavigateToErd,
   onOpenNewPlacement,
   onOpenExport,
   programs,

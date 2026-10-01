@@ -14,10 +14,8 @@ export const StudentOnboardingView: React.FC<StudentOnboardingViewProps> = ({
   currentRole,
   onUpdateDocument,
   onUpdateOrientation,
-  onSaveProfile,
 }) => {
   const [profile, setProfile] = useState<StudentOnboardingProfile>(onboardingData);
-  const isStudent = currentRole === 'student';
   const isReadOnly = currentRole === 'viewer_dinas';
 
   const toggleDoc = (key: keyof StudentOnboardingProfile['documents']) => {

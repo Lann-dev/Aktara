@@ -141,10 +141,9 @@ export const MentorsView: React.FC<MentorsViewProps> = ({
   currentRole,
   searchQuery = '',
   onAddMentor,
-  onAssignStudents,
   onExportMentors,
 }) => {
-  const [mentors, setMentors] = useState<MentorProfile[]>(INITIAL_MENTOR_PROFILES);
+  const [mentors] = useState<MentorProfile[]>(INITIAL_MENTOR_PROFILES);
   const [localSearch, setLocalSearch] = useState('');
   const [selectedType, setSelectedType] = useState<'all' | 'industry_mentor' | 'teacher_mentor'>('all');
   const [selectedOrg, setSelectedOrg] = useState<string>('all');

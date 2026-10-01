@@ -296,6 +296,31 @@
   backdrop-filter: none !important;
 }
 
+@keyframes view-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-enter {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.view-enter {
+  animation: view-enter 220ms ease-out both;
+}
+
+.toast-enter {
+  animation: toast-enter 180ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-enter,
+  .toast-enter {
+    animation: none;
+  }
+}
+
 @media (max-width: 767px) {
   .app-content {
     margin-left: 0;

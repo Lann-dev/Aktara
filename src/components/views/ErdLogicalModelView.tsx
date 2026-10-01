@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ERD_ENTITIES, ERD_RELATIONS, ERD_CORE_TABLES_SUMMARY, SQL_SCHEMA_DDL } from '../../data/erdData';
-import { ErdEntityDefinition, ErdCoreTableSummary } from '../../types';
+import { ErdCoreTableSummary } from '../../types';
 
 interface ErdLogicalModelViewProps {
   onBack?: () => void;

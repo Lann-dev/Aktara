@@ -10,7 +10,6 @@ interface AuditLogsViewProps {
 
 export const AuditLogsView: React.FC<AuditLogsViewProps> = ({
   logs: initialLogs,
-  currentRole,
   searchQuery = '',
   onExportLogs,
 }) => {
@@ -553,7 +552,7 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({
       ) : (
         /* TIMELINE VIEW */
         <div className="space-y-4">
-          {filtered.map((log, index) => {
+          {filtered.map((log) => {
             const statusBadge = getStatusBadge(log.status);
             const roleBadge = getRoleBadgeStyle(log.actorRole);
 

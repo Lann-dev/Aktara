@@ -9,7 +9,6 @@ interface ViewerDinasViewProps {
 export const ViewerDinasView: React.FC<ViewerDinasViewProps> = ({
   onExportReport,
   searchQuery = '',
-  isReadOnly = true,
 }) => {
   const [selectedRegion, setSelectedRegion] = useState('All');
 

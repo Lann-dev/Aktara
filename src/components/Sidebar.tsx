@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UserRole, NavTab, AuthUser } from '../types';
-import { ROLES_CONFIG, normalizeRole, ROLE_NAVIGATIONS, getFullRoute } from '../data/rolesData';
+import { ROLES_CONFIG, normalizeRole, ROLE_NAVIGATIONS } from '../data/rolesData';
 import { ASSETS } from '../data/mockData';
 
 interface SidebarProps {
@@ -30,6 +30,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const navItems = ROLE_NAVIGATIONS[normalized] || ROLE_NAVIGATIONS.school_admin;
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onCloseMobile();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen, onCloseMobile]);
+
   const handleNavClick = (tabId: NavTab) => {
     onTabChange(tabId);
     onCloseMobile();
@@ -48,6 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <aside
         id="main-sidebar"
+        aria-label="Navigasi utama"
         className={`app-sidebar fixed top-0 left-0 bottom-0 w-[250px] bg-white text-slate-600 flex flex-col py-4 px-3 space-y-2 z-50 transition-transform duration-200 ease-out border-r border-slate-200 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}

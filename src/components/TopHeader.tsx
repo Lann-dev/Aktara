@@ -5,6 +5,7 @@ import { ROLES_ARRAY, ROLES_CONFIG, normalizeRole } from '../data/rolesData';
 interface TopHeaderProps {
   currentRole: UserRole;
   currentUser?: AuthUser | null;
+  mobileSidebarOpen: boolean;
   onRoleChange: (role: UserRole) => void;
   onToggleMobileSidebar: () => void;
   searchQuery: string;
@@ -19,6 +20,7 @@ interface TopHeaderProps {
 export const TopHeader: React.FC<TopHeaderProps> = ({
   currentRole,
   currentUser,
+  mobileSidebarOpen,
   onRoleChange,
   onToggleMobileSidebar,
   searchQuery,
@@ -52,6 +54,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             id="mobile-sidebar-toggle-btn"
             onClick={onToggleMobileSidebar}
+            aria-controls="main-sidebar"
+            aria-expanded={mobileSidebarOpen}
             className="md:hidden p-2 text-slate-300 hover:bg-slate-800/60 rounded-xl transition-colors cursor-pointer shrink-0"
             aria-label="Toggle navigation"
           >
@@ -104,6 +108,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             <button
               id="top-role-selector-btn"
               onClick={() => setRoleMenuOpen(!roleMenuOpen)}
+              aria-expanded={roleMenuOpen}
+              aria-haspopup="menu"
               className="app-role-selector flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-[12px] font-medium cursor-pointer transition-colors"
               title="Ganti Peran Pengguna (RBAC Switcher)"
             >

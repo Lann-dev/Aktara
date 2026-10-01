@@ -129,7 +129,7 @@ export const AdminProgramsView: React.FC<AdminProgramsViewProps> = ({
         !q ||
         p.title.toLowerCase().includes(q) ||
         p.department.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q) ||
         p.duration.toLowerCase().includes(q);
 
       const matchYear = selectedYear === 'All Years' || p.academicYear === selectedYear;

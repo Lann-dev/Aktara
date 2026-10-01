@@ -27,7 +27,6 @@ export const CertificationPortfolioView: React.FC<CertificationPortfolioViewProp
     return matchSearch;
   });
 
-  const isStudent = currentRole === 'student';
   const isSchoolAdmin = currentRole === 'school_admin' || currentRole === 'super_admin';
 
   return (

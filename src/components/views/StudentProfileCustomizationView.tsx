@@ -26,7 +26,6 @@ const THEME_COVERS = [
 ];
 
 export const StudentProfileCustomizationView: React.FC<StudentProfileCustomizationViewProps> = ({
-  currentRole,
   onSaveProfile,
   onExportCv,
 }) => {
