@@ -1,0 +1,6 @@
+{
+  "name": "AKTARA - Vocational Internship Management Platform",
+  "description": "Enterprise management platform for vocational school internships, connecting school admins, industry mentors, and students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
