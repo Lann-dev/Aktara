@@ -9,13 +9,17 @@ interface LoginPageProps {
   initialRole?: UserRole;
 }
 
+const isDevelopment = import.meta.env.DEV;
+
 export const LoginPage: React.FC<LoginPageProps> = ({
   onLoginSuccess,
   initialRole = 'school_admin',
 }) => {
   const [selectedRole, setSelectedRole] = useState<UserRole>(initialRole);
-  const [email, setEmail] = useState(ROLES_CONFIG[initialRole]?.defaultEmail || 'admin@smkn1jakarta.sch.id');
-  const [password, setPassword] = useState('aktara@2024');
+  const [email, setEmail] = useState(
+    isDevelopment ? ROLES_CONFIG[initialRole]?.defaultEmail || 'admin@smkn1jakarta.sch.id' : ''
+  );
+  const [password, setPassword] = useState(isDevelopment ? 'aktara@2024' : '');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -81,7 +85,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       const authResult = await SupabaseAuthService.authenticateWithRoleValidation(
         email,
         password,
-        selectedRole,
+        isDevelopment ? selectedRole : undefined,
         (step) => {
           if (step === 'auth') setAuthStep('Memverifikasi Supabase Auth...');
           else if (step === 'get_user') setAuthStep('Mengekstrak authenticated user...');
@@ -140,12 +144,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   return (
-    <div className="login-page min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden font-sans">
+    <div className="login-page min-h-[100svh] w-full flex flex-col justify-center items-center px-4 py-8 sm:px-6 sm:py-10 relative overflow-x-hidden font-sans">
       {/* Dynamic ambient radial glows */}
       {/* Main Container */}
-      <div className="w-full max-w-lg my-auto relative z-10 animate-fade-in py-6">
+      <div className="w-full max-w-md mx-auto relative z-10 animate-fade-in">
         {/* Brand Header Card */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 sm:mb-7">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-950/60 border border-blue-500/30 p-2 shadow-2xl backdrop-blur-xl mb-3 shadow-blue-950/40 ring-1 ring-blue-500/20">
             <img
               src={ASSETS.logo}
@@ -154,22 +158,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               referrerPolicy="no-referrer"
             />
           </div>
-          <h1 className="text-[28px] font-black text-white tracking-tight leading-tight flex items-center justify-center gap-2">
+          <h1 className="text-[24px] sm:text-[28px] font-black text-white tracking-tight leading-tight flex flex-wrap items-center justify-center gap-x-2">
             Selamat Datang di <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-slate-100">AKTARA</span>
           </h1>
           <p className="text-[13px] text-slate-400 mt-1.5 max-w-sm mx-auto">
             Platform Manajemen Magang & Praktik Kerja Lapangan Vokasi Terintegrasi
           </p>
 
-          {/* Security Rule Notice Badge */}
-          <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[11px] text-blue-300 font-medium">
-            <span className="material-symbols-outlined text-[14px] text-blue-400">verified_user</span>
-            <span>Supabase Auth & Database Role Validation Active</span>
-          </div>
+          {isDevelopment && (
+            <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[11px] text-blue-300 font-medium">
+              <span className="material-symbols-outlined text-[14px] text-blue-400">verified_user</span>
+              <span>Supabase Auth & Database Role Validation Active</span>
+            </div>
+          )}
         </div>
 
         {/* Login Card */}
-        <div className="login-card glass-card rounded-3xl p-6 sm:p-8">
+        <div className="login-card glass-card w-full rounded-xl p-5 sm:p-7">
           {/* Security Mismatch Alert Banner */}
           {errorMessage && (
             <div
@@ -227,7 +232,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Role Selector Custom Dropdown (UX Helper) */}
-            <div className="relative">
+            {isDevelopment && <div className="relative">
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Role Selector <span className="text-blue-400 font-normal text-[10px]">(UX Helper Saja)</span>
@@ -332,7 +337,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   </div>
                 </>
               )}
-            </div>
+            </div>}
 
             {/* Email / NISN / NIP Input */}
             <div>
@@ -434,7 +439,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </form>
 
           {/* Quick 1-Click Role Switcher & Flow Inspector */}
-          <div className="mt-6 pt-5 border-t border-slate-800">
+          {isDevelopment && <div className="mt-6 pt-5 border-t border-slate-800">
             <div className="flex items-center justify-between mb-2.5">
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 Akses Cepat Pengujian Role
@@ -580,7 +585,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 </div>
               </div>
             )}
-          </div>
+          </div>}
         </div>
 
         {/* Footer info */}
